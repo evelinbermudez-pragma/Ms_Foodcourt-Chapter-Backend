@@ -1,0 +1,48 @@
+package com.chapter.foodcourt.insfrastructure.configuration;
+
+import com.chapter.foodcourt.domain.api.IDishServicePort;
+import com.chapter.foodcourt.domain.api.IRestaurantServicePort;
+import com.chapter.foodcourt.domain.spi.IDishPersistencePort;
+import com.chapter.foodcourt.domain.spi.IRestaurantPersistencePort;
+import com.chapter.foodcourt.domain.usecase.DishUseCase;
+import com.chapter.foodcourt.domain.usecase.RestaurantUseCase;
+import com.chapter.foodcourt.insfrastructure.client.IUserClient;
+import com.chapter.foodcourt.insfrastructure.output.jpa.adapter.DishJpaAdapter;
+import com.chapter.foodcourt.insfrastructure.output.jpa.adapter.RestaurantJpaAdapter;
+import com.chapter.foodcourt.insfrastructure.output.jpa.mapper.DishEntityMapper;
+import com.chapter.foodcourt.insfrastructure.output.jpa.mapper.RestaurantEntityMapper;
+import com.chapter.foodcourt.insfrastructure.output.jpa.respository.IDishRepository;
+import com.chapter.foodcourt.insfrastructure.output.jpa.respository.IRestaurantRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@RequiredArgsConstructor
+public class BeanConfiguration {
+    private final IRestaurantRepository restaurantRepository;
+    private final RestaurantEntityMapper restaurantEntityMapper;
+
+    private final IDishRepository dishRepository;
+     private final DishEntityMapper dishEntityMapper;
+
+    private final IUserClient userClient;
+
+    @Bean
+    public IRestaurantPersistencePort restaurantPersistencePort(){
+        return new RestaurantJpaAdapter(restaurantRepository, restaurantEntityMapper);
+    }
+    @Bean
+    public IRestaurantServicePort restaurantServicePort(){
+        return new RestaurantUseCase(restaurantPersistencePort(), userClient);
+    }
+    @Bean
+    public IDishPersistencePort dishPersistencePort(){
+        return new DishJpaAdapter(dishRepository, dishEntityMapper);
+    }
+    @Bean
+    public IDishServicePort dishServicePort(){
+        return new DishUseCase(dishPersistencePort(), restaurantPersistencePort());
+    }
+
+}
