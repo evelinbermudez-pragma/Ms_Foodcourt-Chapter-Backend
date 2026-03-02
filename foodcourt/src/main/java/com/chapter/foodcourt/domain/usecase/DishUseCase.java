@@ -41,12 +41,11 @@ public class DishUseCase implements IDishServicePort {
         dishPersistencePort.saveDish(dish);
 
     }
-    private void userIsNotOwner(Dish dish, Integer userId){
+    private void userIsNotOwner(Dish dish, Integer userId) {
         Restaurant restaurant = restaurantPersistencePort.getRestaurant(dish.getRestaurantId());
-        if(!restaurant.getOwnerId().equals(userId)){
-            throw new UserIsNotOwnerException("User isn´t the owner of the restaurant dah");
+        if (!restaurant.getOwnerId().equals(userId)) {
+            throw new UserIsNotOwnerException("User isn't the owner of the restaurant");
         }
-
     }
 
 }

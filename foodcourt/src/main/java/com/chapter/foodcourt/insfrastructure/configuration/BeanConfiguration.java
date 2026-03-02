@@ -10,8 +10,10 @@ import com.chapter.foodcourt.insfrastructure.client.IUserClient;
 import com.chapter.foodcourt.insfrastructure.output.jpa.adapter.DishJpaAdapter;
 import com.chapter.foodcourt.insfrastructure.output.jpa.adapter.RestaurantJpaAdapter;
 import com.chapter.foodcourt.insfrastructure.output.jpa.mapper.DishEntityMapper;
+import com.chapter.foodcourt.insfrastructure.output.jpa.mapper.RestaurantEmployeeEntityMapper;
 import com.chapter.foodcourt.insfrastructure.output.jpa.mapper.RestaurantEntityMapper;
 import com.chapter.foodcourt.insfrastructure.output.jpa.respository.IDishRepository;
+import com.chapter.foodcourt.insfrastructure.output.jpa.respository.IRestaurantEmployeeRepository;
 import com.chapter.foodcourt.insfrastructure.output.jpa.respository.IRestaurantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +24,8 @@ import org.springframework.context.annotation.Configuration;
 public class BeanConfiguration {
     private final IRestaurantRepository restaurantRepository;
     private final RestaurantEntityMapper restaurantEntityMapper;
+    private final IRestaurantEmployeeRepository restaurantEmployeeRepository;
+    private final RestaurantEmployeeEntityMapper restaurantEmployeeEntityMapper;
 
     private final IDishRepository dishRepository;
      private final DishEntityMapper dishEntityMapper;
@@ -29,11 +33,11 @@ public class BeanConfiguration {
     private final IUserClient userClient;
 
     @Bean
-    public IRestaurantPersistencePort restaurantPersistencePort(){
-        return new RestaurantJpaAdapter(restaurantRepository, restaurantEntityMapper);
+    public IRestaurantPersistencePort restaurantPersistencePort() {
+        return new RestaurantJpaAdapter(restaurantRepository, restaurantEntityMapper, restaurantEmployeeRepository, restaurantEmployeeEntityMapper);
     }
     @Bean
-    public IRestaurantServicePort restaurantServicePort(){
+    public IRestaurantServicePort restaurantServicePort() {
         return new RestaurantUseCase(restaurantPersistencePort(), userClient);
     }
     @Bean
