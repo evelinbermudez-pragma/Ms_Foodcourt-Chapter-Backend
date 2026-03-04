@@ -1,4 +1,4 @@
-package com.chapter.foodcourt.insfrastructure.configuration;
+package com.chapter.foodcourt.insfrastructure.output.feign.config;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;

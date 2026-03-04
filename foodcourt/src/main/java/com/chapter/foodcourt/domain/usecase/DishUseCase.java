@@ -41,6 +41,15 @@ public class DishUseCase implements IDishServicePort {
         dishPersistencePort.saveDish(dish);
 
     }
+    @Override
+    public void toggleDish(Integer dishId, Boolean active, Integer userId) {
+        Dish dish = dishPersistencePort.getDish(dishId);
+        userIsNotOwner(dish , userId);
+        dish.setActive(active);
+        dishPersistencePort.saveDish(dish);
+    }
+
+
     private void userIsNotOwner(Dish dish, Integer userId) {
         Restaurant restaurant = restaurantPersistencePort.getRestaurant(dish.getRestaurantId());
         if (!restaurant.getOwnerId().equals(userId)) {

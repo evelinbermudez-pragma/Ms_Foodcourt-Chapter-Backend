@@ -3,7 +3,6 @@ package com.chapter.foodcourt.insfrastructure.output.jpa.adapter;
 import com.chapter.foodcourt.domain.model.Restaurant;
 import com.chapter.foodcourt.domain.model.RestaurantEmployee;
 import com.chapter.foodcourt.domain.spi.IRestaurantPersistencePort;
-import com.chapter.foodcourt.insfrastructure.output.jpa.entity.RestaurantEmployeeEntity;
 import com.chapter.foodcourt.insfrastructure.output.jpa.entity.RestaurantEntity;
 import com.chapter.foodcourt.insfrastructure.output.jpa.exception.ExistsPhoneException;
 import com.chapter.foodcourt.insfrastructure.output.jpa.exception.ExistsRestaurantException;
@@ -13,7 +12,6 @@ import com.chapter.foodcourt.insfrastructure.output.jpa.mapper.RestaurantEntityM
 import com.chapter.foodcourt.insfrastructure.output.jpa.respository.IRestaurantEmployeeRepository;
 import com.chapter.foodcourt.insfrastructure.output.jpa.respository.IRestaurantRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 
 import java.util.Optional;
 
@@ -49,13 +47,8 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort{
     }
 
     @Override
-    public RestaurantEmployee getRestaurantEmployee(Integer employeeId) {
-        Optional<RestaurantEmployeeEntity> employee = restaurantEmployeeRepository.findByEmployeeId(employeeId);
-
-        if (employee.isPresent()) {
-            return  restaurantEmployeeEntityMapper.toRestaurantEmployeeModel(employee.get());
-        }
-
-        throw new NotFoundException("No employee found with id " + employeeId);
+    public Optional<RestaurantEmployee> getRestaurantOfEmployee(Integer employeeId) {
+        return  restaurantEmployeeRepository.findByEmployeeId(employeeId)
+                 .map(restaurantEmployeeEntityMapper::toRestaurantEmployeeModel);
     }
 }

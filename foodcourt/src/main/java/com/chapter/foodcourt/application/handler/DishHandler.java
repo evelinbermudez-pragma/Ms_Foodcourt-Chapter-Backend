@@ -34,4 +34,8 @@ public class DishHandler implements IDishHandler {
     public void updateDish(UpdateDishRequestDto updateDishRequestDto, Integer id, Integer userId) {
         dishServicePort.updateDish(updateDishRequestMapper.toDish(updateDishRequestDto),id,userId);
     }
+    @Override
+    public void toggleDish(Integer dishId, Boolean active, Integer userId) {
+        dishServicePort.toggleDish(dishId,active,userId);
+    }
 }

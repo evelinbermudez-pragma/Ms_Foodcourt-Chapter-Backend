@@ -18,7 +18,7 @@ public class RestaurantEmployeeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private Long employeeId;
 
     @Column(nullable = false)

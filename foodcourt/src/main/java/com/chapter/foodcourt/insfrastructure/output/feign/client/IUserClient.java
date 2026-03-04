@@ -1,7 +1,7 @@
-package com.chapter.foodcourt.insfrastructure.client;
+package com.chapter.foodcourt.insfrastructure.output.feign.client;
 
-import com.chapter.foodcourt.application.dto.client.response.UserResponseDto;
-import com.chapter.foodcourt.insfrastructure.configuration.FeignConfiguration;
+import com.chapter.foodcourt.insfrastructure.output.feign.dto.response.UserResponseDto;
+import com.chapter.foodcourt.insfrastructure.output.feign.config.FeignConfiguration;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

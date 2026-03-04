@@ -9,4 +9,5 @@ public interface IDishHandler {
     void saveDish(DishRequestDto dishRequestDto, Integer userId);
     DishResponseDto getDish(Integer dishId);
     void updateDish (UpdateDishRequestDto updateDishRequestDto, Integer userId, Integer dishId);
+    void toggleDish(Integer dishId, Boolean active, Integer userId);
 }
