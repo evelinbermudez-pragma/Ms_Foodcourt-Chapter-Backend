@@ -12,36 +12,35 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-public class OrderJpaAdapter {
-    @Component
-    @RequiredArgsConstructor
-    public class OrderJpaAdapter implements IOrderPersistencePort {
+@Component
+@RequiredArgsConstructor
+public class OrderJpaAdapter implements IOrderPersistencePort {
 
-        private final IOrderRepository orderRepository;
-        private final OrderEntityMapper orderEntityMapper;
+    private final IOrderRepository orderRepository;
+    private final OrderEntityMapper orderEntityMapper;
 
-        @Override
-        public void saveOrder(Order order) {
-            OrderEntity entity = orderEntityMapper.toOrderEntity(order);
-            if (entity.getOrderDishes() != null) {
-                entity.getOrderDishes().forEach(dish -> dish.setOrder(entity));
-            }
-            orderRepository.save(entity);
+    @Override
+    public void saveOrder(Order order) {
+        OrderEntity entity = orderEntityMapper.toOrderEntity(order);
+        if (entity.getOrderDishes() != null) {
+            entity.getOrderDishes().forEach(dish -> dish.setOrder(entity));
         }
+        orderRepository.save(entity);
+    }
 
-        @Override
-        public Order getOrder(Integer orderId) {
+    @Override
+    public Order getOrder(Integer orderId) {
            //agregar get pedido
-            return orderRepository.findById(orderId)
-                    .map(orderEntityMapper::toOrder)
-                    .orElseThrow(() -> new NotFoundException("Order not found: " + orderId));
-        }
+        return orderRepository.findById(orderId)
+                .map(orderEntityMapper::toOrder)
+                .orElseThrow(() -> new NotFoundException("Order not found: " + orderId));
+    }
 
-        @Override
-        public boolean hasActiveOrders(Integer clientId) {
-            return orderRepository.existsByClientIdAndStatusIn(
-                    clientId,
-                    List.of(Status.PENDING, Status.IN_PREPARATION, Status.READY)
-            );
-        }
+    @Override
+    public boolean hasActiveOrders(Integer clientId) {
+        return orderRepository.existsByClientIdAndStatusIn(
+                clientId,
+                List.of(Status.PENDING, Status.IN_PREPARATION, Status.READY)
+        );
+    }
 }

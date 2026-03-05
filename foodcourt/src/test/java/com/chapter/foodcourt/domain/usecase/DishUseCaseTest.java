@@ -15,11 +15,8 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -202,7 +199,7 @@ class DishUseCaseTest {
         existingDish.setName("Original Pizza");
         existingDish.setPrice(20000.0);
         existingDish.setDescription("Original description");
-        existingDish.setUrlImage("http://image.com/pizza.jpg");
+        existingDish.setImageUrl("http://image.com/pizza.jpg");
         existingDish.setCategory(Category.FAST_FOOD);
         existingDish.setRestaurantId(restaurantId);
         existingDish.setActive(true);
@@ -231,7 +228,7 @@ class DishUseCaseTest {
         assertEquals("Updated new description", savedDish.getDescription());
         assertEquals("Original Pizza", savedDish.getName()); // Name didn't change
         assertEquals(Category.FAST_FOOD, savedDish.getCategory()); // Category didn't change
-        assertEquals("http://image.com/pizza.jpg", savedDish.getUrlImage()); // URL didn't change
+        assertEquals("http://image.com/pizza.jpg", savedDish.getImageUrl()); // URL didn't change
     }
 
     @Test

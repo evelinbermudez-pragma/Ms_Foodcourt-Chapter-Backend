@@ -1,11 +1,14 @@
 package com.chapter.foodcourt.insfrastructure.configuration;
 
 import com.chapter.foodcourt.domain.api.IDishServicePort;
+import com.chapter.foodcourt.domain.api.IOrderServicePort;
 import com.chapter.foodcourt.domain.api.IRestaurantServicePort;
 import com.chapter.foodcourt.domain.spi.IDishPersistencePort;
+import com.chapter.foodcourt.domain.spi.IOrderPersistencePort;
 import com.chapter.foodcourt.domain.spi.IRestaurantPersistencePort;
 import com.chapter.foodcourt.domain.spi.IUserRepository;
 import com.chapter.foodcourt.domain.usecase.DishUseCase;
+import com.chapter.foodcourt.domain.usecase.OrderUseCase;
 import com.chapter.foodcourt.domain.usecase.RestaurantUseCase;
 import com.chapter.foodcourt.insfrastructure.output.feign.client.IUserClient;
 import com.chapter.foodcourt.insfrastructure.output.feign.repository.UserRepositoryImpl;
@@ -63,5 +66,9 @@ public class BeanConfiguration {
     @Bean
     public IDishServicePort dishServicePort() {
         return new DishUseCase(dishPersistencePort(), restaurantPersistencePort());
+    }
+    @Bean
+    public IOrderServicePort orderServicePort(IOrderPersistencePort orderPersistencePort, IDishPersistencePort dishPersistencePort) {
+        return new OrderUseCase(orderPersistencePort, dishPersistencePort);
     }
 }

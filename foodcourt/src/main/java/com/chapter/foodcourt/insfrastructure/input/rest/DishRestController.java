@@ -21,7 +21,8 @@ public class DishRestController {
 
     @PostMapping("/create")
     public ResponseEntity<Void> saveDish(@Valid @RequestBody DishRequestDto dishRequestDto, HttpServletRequest request) {
-       Integer userId = (Integer) request.getAttribute("userId");
+       Long userIdLong = (Long) request.getAttribute("userId");
+       Integer userId = userIdLong.intValue();
         dishHandler.saveDish(dishRequestDto , userId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

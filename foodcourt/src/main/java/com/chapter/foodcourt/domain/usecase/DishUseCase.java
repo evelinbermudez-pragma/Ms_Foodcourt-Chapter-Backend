@@ -28,7 +28,11 @@ public class DishUseCase implements IDishServicePort {
     }
     @Override
     public Dish getDish(Integer id) {
-        return dishPersistencePort.getDish(id);
+        Dish dish = dishPersistencePort.getDish(id);
+        if (dish == null) {
+            throw new DishNotFoundException("Dish not found");
+        }
+        return dish;
     }
     @Override
     public void updateDish(Dish dishModel, Integer userId, Integer dishId) {
