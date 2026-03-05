@@ -8,6 +8,8 @@ import com.chapter.foodcourt.domain.exception.*;
 import com.chapter.foodcourt.domain.model.Restaurant;
 import com.chapter.foodcourt.domain.model.RestaurantEmployee;
 import com.chapter.foodcourt.domain.spi.IRestaurantPersistencePort;
+import org.springframework.data.domain.Page;
+
 
 import static com.chapter.foodcourt.insfrastructure.configuration.Constants.*;
 
@@ -62,5 +64,8 @@ public class RestaurantUseCase implements IRestaurantServicePort {
         return restaurantPersistencePort.getRestaurantOfEmployee(employeeId)
                 .orElseThrow(() -> new RestaurantNotFoundException("Employee not found"));
     }
-
+    @Override
+    public Page<Restaurant> listRestaurants(Integer page, Integer size) {
+        return restaurantPersistencePort.listRestaurants(page, size);
+    }
 }

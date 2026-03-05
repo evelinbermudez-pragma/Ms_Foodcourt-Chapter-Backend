@@ -4,9 +4,11 @@ import com.chapter.foodcourt.application.dto.request.DishRequestDto;
 import com.chapter.foodcourt.application.dto.request.UpdateDishRequestDto;
 import com.chapter.foodcourt.application.dto.response.DishResponseDto;
 import com.chapter.foodcourt.application.handler.interfaces.IDishHandler;
+import com.chapter.foodcourt.domain.model.Category;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,5 +44,14 @@ public class DishRestController {
         Integer userId = (Integer) request.getAttribute("userId");
         dishHandler.toggleDish(dishId, active, userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+    @GetMapping("/restaurant/{restaurantId}")
+    public ResponseEntity<Page<DishResponseDto>> listDishesByRestaurant(
+            @PathVariable Integer restaurantId,
+            @RequestParam(required = false) Category category,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(
+                dishHandler.listDishesByRestaurant(restaurantId, category, page, size));
     }
 }

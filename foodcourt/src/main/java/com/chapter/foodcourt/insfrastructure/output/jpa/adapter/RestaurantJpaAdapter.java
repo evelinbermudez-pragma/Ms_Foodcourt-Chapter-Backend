@@ -12,6 +12,9 @@ import com.chapter.foodcourt.insfrastructure.output.jpa.mapper.RestaurantEntityM
 import com.chapter.foodcourt.insfrastructure.output.jpa.respository.IRestaurantEmployeeRepository;
 import com.chapter.foodcourt.insfrastructure.output.jpa.respository.IRestaurantRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
@@ -50,5 +53,11 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort{
     public Optional<RestaurantEmployee> getRestaurantOfEmployee(Integer employeeId) {
         return  restaurantEmployeeRepository.findByEmployeeId(employeeId)
                  .map(restaurantEmployeeEntityMapper::toRestaurantEmployeeModel);
+    }
+    @Override
+    public Page<Restaurant> listRestaurants(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<RestaurantEntity> entities = restaurantRepository.findAllByOrderByName(pageable);
+        return entities.map(restaurantEntityMapper::toRestaurantModel);
     }
 }

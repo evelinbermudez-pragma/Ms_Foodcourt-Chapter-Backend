@@ -4,11 +4,12 @@ import com.chapter.foodcourt.application.dto.request.RestaurantEmployeeRequestDt
 import com.chapter.foodcourt.application.dto.request.RestaurantRequestDto;
 import com.chapter.foodcourt.application.dto.response.RestaurantEmployeeResponseDto;
 import com.chapter.foodcourt.application.dto.response.RestaurantResponseDto;
+import org.springframework.data.domain.Page;
 
 public interface IRestaurantHandler {
     void saveRestaurant(RestaurantRequestDto restaurantRequestDto);
     RestaurantResponseDto getRestaurant(Integer id);
     void saveRestaurantEmployee(RestaurantEmployeeRequestDto restaurantEmployeeRequestDto);
     RestaurantEmployeeResponseDto getRestaurantEmployee(Integer employeeId);
-
+    Page<RestaurantResponseDto> listRestaurants(int page, int size);
 }

@@ -8,6 +8,7 @@ import com.chapter.foodcourt.application.handler.interfaces.IRestaurantHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,5 +37,11 @@ public class RestaurantRestController {
     @GetMapping("/employee/{id}")
     public ResponseEntity<RestaurantEmployeeResponseDto> getRestaurantEmployee(@PathVariable("id") Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantHandler.getRestaurantEmployee(id));
+    }
+    @GetMapping("/restaurant")
+    public ResponseEntity<Page<RestaurantResponseDto>> listRestaurants(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(restaurantHandler.listRestaurants(page, size));
     }
 }

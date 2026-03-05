@@ -12,6 +12,7 @@ import com.chapter.foodcourt.application.mapper.response.RestaurantResponseMappe
 import com.chapter.foodcourt.domain.api.IRestaurantServicePort;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -42,5 +43,11 @@ public class RestaurantHandler implements IRestaurantHandler {
     @Override
         public RestaurantEmployeeResponseDto getRestaurantEmployee(Integer employeeId) {
         return restaurantEmployeeResponseMapper.toRestaurantEmployeeResponseDto(restaurantServicePort.getRestaurantEmployee(employeeId));
+    }
+    @Override
+    public Page<RestaurantResponseDto> listRestaurants(int page, int size){
+        return restaurantServicePort
+                .listRestaurants(page, size)
+                .map(restaurantResponseMapper::toRestaurantResponseDto);
     }
 }
