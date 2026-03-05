@@ -35,4 +35,13 @@ public class OrderRestController {
         return ResponseEntity.ok(
                 orderHandler.listOrdersByStatus(state, employeeId, page, size));
     }
+    @PatchMapping("/assign/{orderId}")
+    public ResponseEntity<Void> assignOrder(
+            @PathVariable Integer orderId,
+            HttpServletRequest request) {
+        Integer employeeId = (Integer) request.getAttribute("userId");
+        orderHandler.assignOrderAndChangeStatus(orderId, employeeId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 }

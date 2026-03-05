@@ -33,5 +33,9 @@ public class OrderHandler implements IOrderHandler {
                 .listOrdersByStatus(status, employeeId, page, size)
                 .map(orderResponseMapper::toOrderResponseDto);
     }
+    @Override
+    public void assignOrderAndChangeStatus(Integer orderId, Integer employeeId) {
+        orderServicePort.assignOrderAndChangeStatus(orderId, employeeId);
+    }
 
 }

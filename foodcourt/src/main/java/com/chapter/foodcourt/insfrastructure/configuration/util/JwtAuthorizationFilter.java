@@ -27,7 +27,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         // Inicializar el mapa de roles y endpoints
         rolesEndpointsMap.put("ROLE_" + ADMIN_ROLE_ID, Arrays.asList("/restaurant/create", "/restaurant/{id}"));
         rolesEndpointsMap.put("ROLE_" + OWNER_ROLE_ID, Arrays.asList("/restaurant/{id}", "/dish/create", "/dish/{id}", "/dish/state/{id}","/dish/update/{id}", "/restaurant/create/employee"));
-        rolesEndpointsMap.put("ROLE_" + CLIENT_ROLE_ID, Arrays.asList("/order", "/order/state/{state}"));
+        rolesEndpointsMap.put("ROLE_" + CLIENT_ROLE_ID, Arrays.asList("/order"));
+        rolesEndpointsMap.put("ROLE_" + EMPLOYEE_ROLE_ID, Arrays.asList("/order/state/{state}","/order/assign/{orderId}"));
     }
 
     @Override

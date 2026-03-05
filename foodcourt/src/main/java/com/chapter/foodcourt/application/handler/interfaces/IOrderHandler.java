@@ -8,4 +8,5 @@ import org.springframework.data.domain.Page;
 public interface IOrderHandler {
     void createOrder(OrderRequestDto orderRequestDto, Integer clientId);
     Page<OrderResponseDto> listOrdersByStatus(Status status, Integer employeeId, int page, int size);
+    void assignOrderAndChangeStatus(Integer orderId, Integer employeeId);
 }
