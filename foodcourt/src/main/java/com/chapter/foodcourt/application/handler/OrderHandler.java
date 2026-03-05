@@ -7,6 +7,7 @@ import com.chapter.foodcourt.application.mapper.request.OrderRequestMapper;
 import com.chapter.foodcourt.application.mapper.response.OrderResponseMapper;
 import com.chapter.foodcourt.domain.api.IOrderServicePort;
 import com.chapter.foodcourt.domain.model.Order;
+import com.chapter.foodcourt.domain.model.Status;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,12 @@ public class OrderHandler implements IOrderHandler {
     public void createOrder(OrderRequestDto orderRequestDto, Integer clientId) {
         Order order = orderRequestMapper.toOrder(orderRequestDto);
         orderServicePort.createOrder(order, clientId);
+    }
+    @Override
+    public Page<OrderResponseDto> listOrdersByStatus(Status status, Integer employeeId, int page, int size) {
+        return orderServicePort
+                .listOrdersByStatus(status, employeeId, page, size)
+                .map(orderResponseMapper::toOrderResponseDto);
     }
 
 }

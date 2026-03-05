@@ -9,6 +9,7 @@ import com.chapter.foodcourt.domain.model.OrderDish;
 import com.chapter.foodcourt.domain.model.Status;
 import com.chapter.foodcourt.domain.spi.IDishPersistencePort;
 import com.chapter.foodcourt.domain.spi.IOrderPersistencePort;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 
@@ -36,5 +37,9 @@ public class OrderUseCase implements IOrderServicePort {
         order.setStatus(Status.PENDING);
         order.setDate(LocalDateTime.now());
         orderPersistencePort.saveOrder(order);
+    }
+    @Override
+    public Page<Order> listOrdersByStatus(Status status, Integer employeeId, int page, int size) {
+        return orderPersistencePort.listOrdersByStatus(status, employeeId, page, size);
     }
 }

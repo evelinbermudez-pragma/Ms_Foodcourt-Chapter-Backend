@@ -48,7 +48,7 @@ public class JwtUtil {
             throw new JwtException("JWT claims string is empty");
         }
     }
-
+    /*
     public Long getUserId(String token) {
         Claims claims = Jwts.parser()
                 .verifyWith(getSigningKey())
@@ -57,5 +57,15 @@ public class JwtUtil {
                 .getPayload();
 
         return claims.get("userId", Long.class);
+    }*/
+    public Integer getUserId(String token) {  // ← Long → Integer
+        Claims claims = Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        Long userId = claims.get("userId", Long.class);
+        return userId.intValue();  // ← convierte internamente
     }
 }

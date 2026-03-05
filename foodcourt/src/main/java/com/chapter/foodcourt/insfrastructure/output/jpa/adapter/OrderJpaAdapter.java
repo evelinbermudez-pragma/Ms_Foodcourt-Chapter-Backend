@@ -8,6 +8,9 @@ import com.chapter.foodcourt.insfrastructure.output.jpa.exception.NotFoundExcept
 import com.chapter.foodcourt.insfrastructure.output.jpa.mapper.OrderEntityMapper;
 import com.chapter.foodcourt.insfrastructure.output.jpa.respository.IOrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -30,7 +33,6 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
 
     @Override
     public Order getOrder(Integer orderId) {
-           //agregar get pedido
         return orderRepository.findById(orderId)
                 .map(orderEntityMapper::toOrder)
                 .orElseThrow(() -> new NotFoundException("Order not found: " + orderId));
@@ -42,5 +44,11 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
                 clientId,
                 List.of(Status.PENDING, Status.IN_PREPARATION, Status.READY)
         );
+    }
+    @Override
+    public Page<Order> listOrdersByStatus(Status status, Integer restaurantId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return orderRepository.findByRestaurantIdAndStatus(restaurantId, status, pageable)
+                .map(orderEntityMapper::toOrder);
     }
 }

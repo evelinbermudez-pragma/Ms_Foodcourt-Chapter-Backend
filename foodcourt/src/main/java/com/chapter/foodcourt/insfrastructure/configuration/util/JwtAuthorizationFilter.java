@@ -27,7 +27,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         // Inicializar el mapa de roles y endpoints
         rolesEndpointsMap.put("ROLE_" + ADMIN_ROLE_ID, Arrays.asList("/restaurant/create", "/restaurant/{id}"));
         rolesEndpointsMap.put("ROLE_" + OWNER_ROLE_ID, Arrays.asList("/restaurant/{id}", "/dish/create", "/dish/{id}", "/dish/state/{id}","/dish/update/{id}", "/restaurant/create/employee"));
-        //Agregar más roles y endpoints según sea necesario
+        rolesEndpointsMap.put("ROLE_" + CLIENT_ROLE_ID, Arrays.asList("/order", "/order/state/{state}"));
     }
 
     @Override
@@ -46,8 +46,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 sendUnauthorizedError(response);
                 return;
             }
-
-            Long userId = jwtUtil.getUserId(token);
+            //acá habia un long pero lo cambie a integer porque el id de usuario es integer
+            Integer userId = jwtUtil.getUserId(token);
             request.setAttribute("userId", userId);
 
             filterChain.doFilter(request, response);
