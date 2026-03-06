@@ -1,0 +1,30 @@
+package com.chapter.foodcourt.application.handler;
+
+import com.chapter.foodcourt.application.dto.request.OrderRequestDto;
+import com.chapter.foodcourt.application.dto.response.OrderResponseDto;
+import com.chapter.foodcourt.application.handler.interfaces.IOrderHandler;
+import com.chapter.foodcourt.application.mapper.request.OrderRequestMapper;
+import com.chapter.foodcourt.application.mapper.response.OrderResponseMapper;
+import com.chapter.foodcourt.domain.api.IOrderServicePort;
+import com.chapter.foodcourt.domain.model.Order;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+@Transactional
+public class OrderHandler implements IOrderHandler {
+
+    private final IOrderServicePort orderServicePort;
+    private final OrderRequestMapper orderRequestMapper;
+    private final OrderResponseMapper orderResponseMapper;
+
+    @Override
+    public void createOrder(OrderRequestDto orderRequestDto, Integer clientId) {
+        Order order = orderRequestMapper.toOrder(orderRequestDto);
+        orderServicePort.createOrder(order, clientId);
+    }
+
+}
