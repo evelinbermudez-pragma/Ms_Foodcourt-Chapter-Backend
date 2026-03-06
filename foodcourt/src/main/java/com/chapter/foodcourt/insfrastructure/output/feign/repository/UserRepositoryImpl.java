@@ -32,4 +32,8 @@ public class UserRepositoryImpl implements IUserRepository {
         user.setRoleId(dto.getRoleId());
         return user;
     }
+    @Override
+    public String getUserPhone(Integer userId) {
+        return usuarioClient.getUserPhone(userId);
+    }
 }

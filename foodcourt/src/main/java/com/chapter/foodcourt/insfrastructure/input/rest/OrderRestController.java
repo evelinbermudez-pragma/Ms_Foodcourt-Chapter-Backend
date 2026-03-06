@@ -43,5 +43,13 @@ public class OrderRestController {
         orderHandler.assignOrderAndChangeStatus(orderId, employeeId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+    @PatchMapping("/ready/{orderId}")
+    public ResponseEntity<Void> notifyOrderReady(
+            @PathVariable Integer orderId,
+            HttpServletRequest request) {
+        Integer employeeId = (Integer) request.getAttribute("userId");
+        orderHandler.notifyOrderReady(orderId, employeeId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
 }

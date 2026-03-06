@@ -37,5 +37,9 @@ public class OrderHandler implements IOrderHandler {
     public void assignOrderAndChangeStatus(Integer orderId, Integer employeeId) {
         orderServicePort.assignOrderAndChangeStatus(orderId, employeeId);
     }
+    @Override
+    public void notifyOrderReady(Integer orderId, Integer employeeId) {
+        orderServicePort.notifyOrderReady(orderId, employeeId);
+    }
 
 }

@@ -9,4 +9,5 @@ public interface IOrderHandler {
     void createOrder(OrderRequestDto orderRequestDto, Integer clientId);
     Page<OrderResponseDto> listOrdersByStatus(Status status, Integer employeeId, int page, int size);
     void assignOrderAndChangeStatus(Integer orderId, Integer employeeId);
+    void notifyOrderReady(Integer orderId, Integer employeeId);
 }

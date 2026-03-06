@@ -8,5 +8,6 @@ import java.util.Optional;
 public interface IUserRepository {
    Optional<User> getUserById(Integer id);
    Optional<User> getUserByEmail(String email);
+   String getUserPhone(Integer userId);
 
 }

@@ -8,4 +8,5 @@ public interface IOrderServicePort {
     void createOrder(Order order, Integer clientId);
     Page<Order> listOrdersByStatus(Status status, Integer employeeId, int page, int size);
     void assignOrderAndChangeStatus(Integer orderId, Integer employeeId);
+    void notifyOrderReady(Integer orderId, Integer employeeId);
 }

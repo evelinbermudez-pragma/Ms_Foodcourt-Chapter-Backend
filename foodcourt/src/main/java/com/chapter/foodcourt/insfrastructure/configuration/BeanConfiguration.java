@@ -3,14 +3,13 @@ package com.chapter.foodcourt.insfrastructure.configuration;
 import com.chapter.foodcourt.domain.api.IDishServicePort;
 import com.chapter.foodcourt.domain.api.IOrderServicePort;
 import com.chapter.foodcourt.domain.api.IRestaurantServicePort;
-import com.chapter.foodcourt.domain.spi.IDishPersistencePort;
-import com.chapter.foodcourt.domain.spi.IOrderPersistencePort;
-import com.chapter.foodcourt.domain.spi.IRestaurantPersistencePort;
-import com.chapter.foodcourt.domain.spi.IUserRepository;
+import com.chapter.foodcourt.domain.spi.*;
 import com.chapter.foodcourt.domain.usecase.DishUseCase;
 import com.chapter.foodcourt.domain.usecase.OrderUseCase;
 import com.chapter.foodcourt.domain.usecase.RestaurantUseCase;
+import com.chapter.foodcourt.insfrastructure.output.feign.client.ISmsClient;
 import com.chapter.foodcourt.insfrastructure.output.feign.client.IUserClient;
+import com.chapter.foodcourt.insfrastructure.output.feign.repository.SmsRepositoryImpl;
 import com.chapter.foodcourt.insfrastructure.output.feign.repository.UserRepositoryImpl;
 import com.chapter.foodcourt.insfrastructure.output.jpa.adapter.DishJpaAdapter;
 import com.chapter.foodcourt.insfrastructure.output.jpa.adapter.RestaurantJpaAdapter;
@@ -70,5 +69,9 @@ public class BeanConfiguration {
     @Bean
     public IOrderServicePort orderServicePort(IOrderPersistencePort orderPersistencePort, IDishPersistencePort dishPersistencePort, IRestaurantPersistencePort restaurantPersistencePort) {
         return new OrderUseCase(orderPersistencePort, dishPersistencePort, restaurantPersistencePort);
+    }
+    @Bean
+    public ISmsRepository smsPersistencePort(ISmsClient smsClient) {
+        return new SmsRepositoryImpl(smsClient);
     }
 }

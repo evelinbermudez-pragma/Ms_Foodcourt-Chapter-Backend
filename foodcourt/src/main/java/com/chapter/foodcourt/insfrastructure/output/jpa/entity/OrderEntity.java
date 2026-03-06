@@ -20,6 +20,7 @@ public class OrderEntity {
     private Integer restaurantId;
     private Integer employeeId;
     private LocalDateTime date;
+    private String securityPin;
 
     @Enumerated(EnumType.STRING)
     private Status status;

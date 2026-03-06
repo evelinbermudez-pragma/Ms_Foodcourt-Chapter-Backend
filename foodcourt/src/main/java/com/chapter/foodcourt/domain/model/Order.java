@@ -9,16 +9,18 @@ public class Order {
     private Integer restaurantId;
     private LocalDateTime date;
     private Status status;
-    private Integer employeeId;          
+    private Integer employeeId;
+    private String securityPin;
     private List<OrderDish> orderDishes;
 
-    public Order(Integer id, Integer restaurantId, Integer clientId, LocalDateTime date, Integer employeeId, Status status, List<OrderDish> orderDishes) {
+    public Order(Integer id, Integer restaurantId, Integer clientId, LocalDateTime date, Integer employeeId, Status status, String securityPin, List<OrderDish> orderDishes) {
         this.id = id;
         this.restaurantId = restaurantId;
         this.clientId = clientId;
         this.date = date;
         this.employeeId = employeeId;
         this.status = status;
+        this.securityPin = securityPin;
         this.orderDishes = orderDishes;
     }
     public Order(){
@@ -79,5 +81,13 @@ public class Order {
 
     public void setOrderDishes(List<OrderDish> orderDishes) {
         this.orderDishes = orderDishes;
+    }
+
+    public String getSecurityPin() {
+        return securityPin;
+    }
+
+    public void setSecurityPin(String securityPin) {
+        this.securityPin = securityPin;
     }
 }
