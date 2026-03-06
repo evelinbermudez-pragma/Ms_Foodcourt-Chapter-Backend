@@ -1,6 +1,9 @@
 package com.chapter.foodcourt.application.dto.request;
 
+import com.chapter.foodcourt.domain.model.Category;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,9 +12,20 @@ import lombok.Setter;
 public class DishRequestDto {
     @NotBlank(message = "Name is required")
     private String name;
+
     @NotBlank(message = "Description is required")
     private String description;
-    @NotBlank(message = "Price is required")
+
+    @NotNull(message = "Price is required")
+    @Positive(message = "Price must be greater than 0")
     private Double price;
+
+    @NotBlank(message = "Image URL is required")
+    private String imageUrl;
+
+    @NotNull(message = "Category is required")
+    private Category category;
+
+    @NotNull(message = "Restaurant is required")
     private Integer restaurantId;
 }

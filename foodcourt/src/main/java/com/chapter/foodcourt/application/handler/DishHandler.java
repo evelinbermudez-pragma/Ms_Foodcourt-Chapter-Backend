@@ -8,8 +8,10 @@ import com.chapter.foodcourt.application.mapper.request.DishRequestMapper;
 import com.chapter.foodcourt.application.mapper.request.UpdateDishRequestMapper;
 import com.chapter.foodcourt.application.mapper.response.DishResponseMapper;
 import com.chapter.foodcourt.domain.api.IDishServicePort;
+import com.chapter.foodcourt.domain.model.Category;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,5 +35,14 @@ public class DishHandler implements IDishHandler {
     @Override
     public void updateDish(UpdateDishRequestDto updateDishRequestDto, Integer id, Integer userId) {
         dishServicePort.updateDish(updateDishRequestMapper.toDish(updateDishRequestDto),id,userId);
+    }
+    @Override
+    public void toggleDish(Integer dishId, Boolean active, Integer userId) {
+        dishServicePort.toggleDish(dishId,active,userId);
+    }
+    @Override
+    public Page<DishResponseDto> listDishesByRestaurant(Integer restaurantId, Category category, int page, int size) {
+        return dishServicePort.listDishesByRestaurant(restaurantId, category, page, size)
+                .map(dishResponseMapper::toDishResponseDto);
     }
 }
