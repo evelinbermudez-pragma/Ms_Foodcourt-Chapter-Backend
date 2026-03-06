@@ -12,7 +12,6 @@ public class Restaurant {
     public Restaurant(){
 
     }
-
     public Restaurant(Integer id, String name, String address, String nit, String phone, String urlLogo, Integer ownerId) {
         this.id = id;
         this.name = name;

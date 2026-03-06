@@ -1,5 +1,6 @@
 package com.chapter.foodcourt.insfrastructure.output.jpa.entity;
 
+import com.chapter.foodcourt.domain.model.Category;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,9 +18,8 @@ public class DishEntity {
     private String description;
     private Double price;
     private String imageUrl;
-    @ManyToOne
-    @JoinColumn(name = "restaurant_id")
-    private RestaurantEntity restaurant;
+    private Integer restaurantId;
     private boolean active;
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private Category category;
 }
