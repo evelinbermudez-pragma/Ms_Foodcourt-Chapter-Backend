@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 @RestController
 @RequestMapping("/dish")
 @RequiredArgsConstructor
@@ -35,4 +33,14 @@ public class DishRestController {
         dishHandler.updateDish(updateDishRequestDto, id , userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
      }
+    @PatchMapping("/{id}/toggle")
+    public ResponseEntity<Void> toggleDish(
+            @PathVariable("id") Integer dishId,
+            @RequestParam Boolean active,
+            HttpServletRequest request) {
+
+        Integer userId = (Integer) request.getAttribute("userId");
+        dishHandler.toggleDish(dishId, active, userId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
