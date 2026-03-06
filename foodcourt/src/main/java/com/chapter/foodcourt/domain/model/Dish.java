@@ -5,19 +5,19 @@ public class Dish {
     private String name;
     private String description;
     private Double price;
-    private String urlImage;
+    private String imageUrl;
     private Category category;
     private boolean active;
     private Integer restaurantId;
 
     public Dish() {
     }
-    public Dish(Integer id, String name, String description, Double price, String urlImage, Category category, Integer restaurantId, boolean active) {
+    public Dish(Integer id, String name, String description, Double price, String imageUrl, Category category, Integer restaurantId, boolean active) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.urlImage = urlImage;
+        this.imageUrl = imageUrl;
         this.category = category;
         this.active = active;
         this.restaurantId = restaurantId;
@@ -39,10 +39,10 @@ public class Dish {
         return price;}
     public void setPrice(Double price) {
         this.price = price;}
-    public String getUrlImage() {
-        return urlImage;}
-    public void setUrlImage(String urlImage) {
-        this.urlImage = urlImage;}
+    public String getImageUrl() {
+        return imageUrl;}
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;}
     public Category getCategory() {
         return category;}
     public void setCategory(Category category) {
