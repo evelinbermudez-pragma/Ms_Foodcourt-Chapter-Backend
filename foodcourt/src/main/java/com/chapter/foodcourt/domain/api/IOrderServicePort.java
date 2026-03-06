@@ -10,4 +10,5 @@ public interface IOrderServicePort {
     void assignOrderAndChangeStatus(Integer orderId, Integer employeeId);
     void notifyOrderReady(Integer orderId, Integer employeeId);
     void deliverOrder(Integer orderId, Integer employeeId, String pin);
+    void cancelOrder(Integer orderId, Integer clientId);
 }

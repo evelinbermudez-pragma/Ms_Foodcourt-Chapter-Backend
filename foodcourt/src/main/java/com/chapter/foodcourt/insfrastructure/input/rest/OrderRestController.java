@@ -60,5 +60,13 @@ public class OrderRestController {
         orderHandler.deliverOrder(orderId, employeeId, pin);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+    @DeleteMapping("/cancel/{orderId}")
+    public ResponseEntity<Void> cancelOrder(
+            @PathVariable Integer orderId,
+            HttpServletRequest request) {
+        Integer clientId = (Integer) request.getAttribute("userId");
+        orderHandler.cancelOrder(orderId, clientId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
 }

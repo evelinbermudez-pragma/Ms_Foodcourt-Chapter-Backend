@@ -45,5 +45,9 @@ public class OrderHandler implements IOrderHandler {
     public void deliverOrder(Integer orderId, Integer employeeId, String pin) {
         orderServicePort.deliverOrder(orderId, employeeId, pin);
     }
+    @Override
+    public void cancelOrder(Integer orderId, Integer clientId) {
+        orderServicePort.cancelOrder(orderId, clientId);
+    }
 
 }

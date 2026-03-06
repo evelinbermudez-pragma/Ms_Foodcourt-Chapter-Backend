@@ -107,4 +107,23 @@ public class OrderUseCase implements IOrderServicePort {
         order.setStatus(Status.DELIVERED);
         orderPersistencePort.saveOrder(order);
     }
+    @Override
+    public void cancelOrder(Integer orderId, Integer clientId) {
+        Order order = orderPersistencePort.getOrder(orderId);
+
+        if (!order.getClientId().equals(clientId)) {
+            throw new RuntimeException("Order does not belong to this client");
+        }
+
+        if (!order.getStatus().equals(Status.PENDING)) {
+            smsRepository.sendSms(
+                    userRepository.getUserPhone(clientId),
+                    "Lo sentimos, tu pedido ya está en preparación y no puede cancelarse"
+            );
+            throw new RuntimeException("Order cannot be cancelled");
+        }
+
+        order.setStatus(Status.CANCELLED);
+        orderPersistencePort.saveOrder(order);
+    }
 }
