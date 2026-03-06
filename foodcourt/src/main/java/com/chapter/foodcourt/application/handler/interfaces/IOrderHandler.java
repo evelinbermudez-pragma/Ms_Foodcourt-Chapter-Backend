@@ -10,4 +10,5 @@ public interface IOrderHandler {
     Page<OrderResponseDto> listOrdersByStatus(Status status, Integer employeeId, int page, int size);
     void assignOrderAndChangeStatus(Integer orderId, Integer employeeId);
     void notifyOrderReady(Integer orderId, Integer employeeId);
+    void deliverOrder(Integer orderId, Integer employeeId, String pin);
 }

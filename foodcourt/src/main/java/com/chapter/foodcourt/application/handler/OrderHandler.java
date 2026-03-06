@@ -41,5 +41,9 @@ public class OrderHandler implements IOrderHandler {
     public void notifyOrderReady(Integer orderId, Integer employeeId) {
         orderServicePort.notifyOrderReady(orderId, employeeId);
     }
+    @Override
+    public void deliverOrder(Integer orderId, Integer employeeId, String pin) {
+        orderServicePort.deliverOrder(orderId, employeeId, pin);
+    }
 
 }

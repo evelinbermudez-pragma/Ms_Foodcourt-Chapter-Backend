@@ -51,5 +51,14 @@ public class OrderRestController {
         orderHandler.notifyOrderReady(orderId, employeeId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+    @PatchMapping("/deliver/{orderId}")
+    public ResponseEntity<Void> deliverOrder(
+            @PathVariable Integer orderId,
+            @RequestParam String pin,
+            HttpServletRequest request) {
+        Integer employeeId = (Integer) request.getAttribute("userId");
+        orderHandler.deliverOrder(orderId, employeeId, pin);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
 }

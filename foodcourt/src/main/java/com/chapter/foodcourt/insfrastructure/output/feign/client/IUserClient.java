@@ -19,6 +19,6 @@ public interface IUserClient {
     @GetMapping(value = "/owner/employee/{email}")
     UserResponseDto getEmployee(@PathVariable("email") String email);
 
-    @GetMapping(value = "/client/{userId}/phone")  // ← agrega esto
+    @GetMapping(value = "/client/{userId}/phone")
     String getUserPhone(@PathVariable Integer userId);
 }

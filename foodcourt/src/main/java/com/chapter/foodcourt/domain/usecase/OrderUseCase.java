@@ -92,4 +92,19 @@ public class OrderUseCase implements IOrderServicePort {
                 "Tu pedido está listo. Pin de seguridad: " + pin
         );
     }
+    @Override
+    public void deliverOrder(Integer orderId, Integer employeeId, String pin) {
+        Order order = orderPersistencePort.getOrder(orderId);
+
+        if (!order.getStatus().equals(Status.READY)) {
+            throw new RuntimeException("Order is not in READY status");
+        }
+
+        if (!order.getSecurityPin().equals(pin)) {
+            throw new RuntimeException("Invalid security pin");
+        }
+
+        order.setStatus(Status.DELIVERED);
+        orderPersistencePort.saveOrder(order);
+    }
 }
