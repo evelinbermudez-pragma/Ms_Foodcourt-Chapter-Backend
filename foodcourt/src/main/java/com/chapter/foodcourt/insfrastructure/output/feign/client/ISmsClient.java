@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(
         name = "twilio",
-        url = "http://localhost:8083",
+        url = "${ms-mensajeria.url}",
         configuration = FeignConfiguration.class
 )
 public interface ISmsClient {

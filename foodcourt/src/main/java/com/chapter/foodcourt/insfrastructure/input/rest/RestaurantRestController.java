@@ -2,6 +2,7 @@ package com.chapter.foodcourt.insfrastructure.input.rest;
 
 import com.chapter.foodcourt.application.dto.request.RestaurantEmployeeRequestDto;
 import com.chapter.foodcourt.application.dto.request.RestaurantRequestDto;
+import com.chapter.foodcourt.application.dto.response.ListRestaurantResponseDto;
 import com.chapter.foodcourt.application.dto.response.RestaurantEmployeeResponseDto;
 import com.chapter.foodcourt.application.dto.response.RestaurantResponseDto;
 import com.chapter.foodcourt.application.handler.interfaces.IRestaurantHandler;
@@ -12,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/restaurant")
@@ -38,8 +41,16 @@ public class RestaurantRestController {
     public ResponseEntity<RestaurantEmployeeResponseDto> getRestaurantEmployee(@PathVariable("id") Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantHandler.getRestaurantEmployee(id));
     }
-    @GetMapping("/restaurant")
+    /*
+    @GetMapping("/listRestaurants")
     public ResponseEntity<Page<RestaurantResponseDto>> listRestaurants(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(restaurantHandler.listRestaurants(page, size));
+    }
+    */
+    @GetMapping("/listRestaurants")
+    public ResponseEntity<List<ListRestaurantResponseDto>> listRestaurants(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(restaurantHandler.listRestaurants(page, size));

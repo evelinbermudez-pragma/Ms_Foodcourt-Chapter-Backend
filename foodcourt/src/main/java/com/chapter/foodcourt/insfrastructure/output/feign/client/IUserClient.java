@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(
         name = "user",
-        url = "http://localhost:8081",
+        url = "${ms-user.url}",
         configuration = FeignConfiguration.class
 )
 public interface IUserClient {

@@ -11,10 +11,16 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class FeignConfiguration implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate requestTemplate) {
-        final String authorization = HttpHeaders.AUTHORIZATION;
-        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        String authorizationHeader = requestAttributes.getRequest().getHeader(HttpHeaders.AUTHORIZATION);
-        requestTemplate.header(authorization);
-        requestTemplate.header(authorization, authorizationHeader);
+        ServletRequestAttributes requestAttributes =
+                (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
+        if (requestAttributes != null) {
+            String authorizationHeader = requestAttributes.getRequest()
+                    .getHeader(HttpHeaders.AUTHORIZATION);
+
+            if (authorizationHeader != null) {
+                requestTemplate.header(HttpHeaders.AUTHORIZATION, authorizationHeader);
+            }
+        }
     }
 }

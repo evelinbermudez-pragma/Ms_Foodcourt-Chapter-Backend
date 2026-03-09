@@ -1,6 +1,6 @@
 package com.chapter.foodcourt.insfrastructure.configuration.util;
 
-
+import com.chapter.foodcourt.insfrastructure.configuration.RolesConfig;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,22 +14,12 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import static com.chapter.foodcourt.insfrastructure.configuration.Constants.*;
-
 @RequiredArgsConstructor
 @Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private static final Map<String, List<String>> rolesEndpointsMap = new HashMap<>();
-
-    static {
-        // Inicializar el mapa de roles y endpoints
-        rolesEndpointsMap.put("ROLE_" + ADMIN_ROLE_ID, Arrays.asList("/restaurant/create", "/restaurant/{id}"));
-        rolesEndpointsMap.put("ROLE_" + OWNER_ROLE_ID, Arrays.asList("/restaurant/{id}", "/dish/create", "/dish/{id}", "/dish/state/{id}","/dish/update/{id}", "/restaurant/create/employee"));
-        rolesEndpointsMap.put("ROLE_" + CLIENT_ROLE_ID, Arrays.asList("/order"));
-        rolesEndpointsMap.put("ROLE_" + EMPLOYEE_ROLE_ID, Arrays.asList("/order/state/{state}","/order/assign/{orderId}"));
-    }
+    private final RolesConfig rolesConfig;  // ← inyecta roles desde yaml
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -47,19 +37,52 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 sendUnauthorizedError(response);
                 return;
             }
-            //acá habia un long pero lo cambie a integer porque el id de usuario es integer
+
             Integer userId = jwtUtil.getUserId(token);
             request.setAttribute("userId", userId);
-
             filterChain.doFilter(request, response);
+
         } catch (RuntimeException e) {
             sendUnauthorizedError(response, e.getMessage());
         }
     }
 
+    private Map<String, List<String>> buildRolesMap() {
+        Map<String, List<String>> map = new HashMap<>();
+
+        map.put("ROLE_" + rolesConfig.getAdmin(), Arrays.asList(
+                "/restaurant/create",
+                "/restaurant/{id}"
+        ));
+        map.put("ROLE_" + rolesConfig.getOwner(), Arrays.asList(
+                "/restaurant/{id}",
+                "/dish/create",
+                "/dish/{id}",
+                "/dish/state/{id}",
+                "/dish/{id}/toggle",
+                "/dish/update/{id}",
+                "/restaurant/create/employee"
+        ));
+        map.put("ROLE_" + rolesConfig.getClient(), Arrays.asList(
+                "/order",
+                "/order/cancel/{orderId}",
+                "/restaurant/listRestaurants",
+                "/dish/restaurant/{restaurantId}"
+        ));
+        map.put("ROLE_" + rolesConfig.getEmployee(), Arrays.asList(
+                "/order/state/{state}",
+                "/order/assign/{orderId}",
+                "/order/ready/{orderId}",
+                "/order/deliver/{orderId}"
+        ));
+
+        return map;
+    }
+
     private boolean isRoleAuthorizedForEndpoint(List<String> roles, String endpoint) {
+        Map<String, List<String>> rolesMap = buildRolesMap();
         for (String role : roles) {
-            List<String> roleEndpoints = rolesEndpointsMap.get(role);
+            List<String> roleEndpoints = rolesMap.get(role);
             if (roleEndpoints != null) {
                 for (String allowedEndpoint : roleEndpoints) {
                     if (isEndpointMatch(allowedEndpoint, endpoint)) {
@@ -78,7 +101,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 .replaceAll("\\{state\\}", "[^/]+")
                 .replaceAll("\\{orderId\\}", "[^/]+")
         );
-
         return pattern.matcher(actualEndpoint).matches();
     }
 

@@ -10,9 +10,8 @@ import lombok.Setter;
 @Setter
 public class UpdateDishRequestDto {
 
-    @NotNull(message= "The name is required")
-    @Min(value = 1, message = "The name must be more than cero")
-    private String price;
+    @Min(value = 1, message = "The price must be more than zero")
+    private Double price;
 
     @NotBlank(message = "The description is required")
     public String description;

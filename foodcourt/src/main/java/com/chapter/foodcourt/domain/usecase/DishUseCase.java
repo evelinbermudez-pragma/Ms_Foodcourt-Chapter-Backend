@@ -37,11 +37,16 @@ public class DishUseCase implements IDishServicePort {
     @Override
     public void updateDish(Dish dishModel, Integer userId, Integer dishId) {
         Dish dish = dishPersistencePort.getDish(dishId);
-        userIsNotOwner(dish , userId);
-        dish.setPrice(dishModel.getPrice());
-        dish.setDescription(dishModel.getDescription());
-        dishPersistencePort.saveDish(dish);
+        userIsNotOwner(dish, userId);
 
+        if (dishModel.getPrice() != null) {
+            dish.setPrice(dishModel.getPrice());
+        }
+        if (dishModel.getDescription() != null) {
+            dish.setDescription(dishModel.getDescription());
+        }
+
+        dishPersistencePort.saveDish(dish);
     }
     @Override
     public void toggleDish(Integer dishId, Boolean active, Integer userId) {
@@ -62,6 +67,5 @@ public class DishUseCase implements IDishServicePort {
             throw new UserIsNotOwnerException("User isn't the owner of the restaurant");
         }
     }
-
 
 }

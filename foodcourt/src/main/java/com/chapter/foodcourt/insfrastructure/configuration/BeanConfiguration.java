@@ -8,8 +8,10 @@ import com.chapter.foodcourt.domain.usecase.DishUseCase;
 import com.chapter.foodcourt.domain.usecase.OrderUseCase;
 import com.chapter.foodcourt.domain.usecase.RestaurantUseCase;
 import com.chapter.foodcourt.insfrastructure.output.feign.client.ISmsClient;
+import com.chapter.foodcourt.insfrastructure.output.feign.client.ITrazabilityClient;
 import com.chapter.foodcourt.insfrastructure.output.feign.client.IUserClient;
 import com.chapter.foodcourt.insfrastructure.output.feign.repository.SmsRepositoryImpl;
+import com.chapter.foodcourt.insfrastructure.output.feign.repository.TrazabilityRepositoryImpl;
 import com.chapter.foodcourt.insfrastructure.output.feign.repository.UserRepositoryImpl;
 import com.chapter.foodcourt.insfrastructure.output.jpa.adapter.DishJpaAdapter;
 import com.chapter.foodcourt.insfrastructure.output.jpa.adapter.RestaurantJpaAdapter;
@@ -67,11 +69,15 @@ public class BeanConfiguration {
         return new DishUseCase(dishPersistencePort(), restaurantPersistencePort());
     }
     @Bean
-    public IOrderServicePort orderServicePort(IOrderPersistencePort orderPersistencePort, IDishPersistencePort dishPersistencePort, IRestaurantPersistencePort restaurantPersistencePort) {
-        return new OrderUseCase(orderPersistencePort, dishPersistencePort, restaurantPersistencePort);
+    public IOrderServicePort orderServicePort(IOrderPersistencePort orderPersistencePort, IDishPersistencePort dishPersistencePort, IRestaurantPersistencePort restaurantPersistencePort, ISmsRepository smsRepository, IUserRepository userRepository, ITrazabilityRepository traceabilityRepository, IAuthenticationPort authenticationPort) {
+        return new OrderUseCase(orderPersistencePort, dishPersistencePort, restaurantPersistencePort, smsRepository, userRepository, traceabilityRepository, authenticationPort);
     }
     @Bean
     public ISmsRepository smsPersistencePort(ISmsClient smsClient) {
         return new SmsRepositoryImpl(smsClient);
+    }
+    @Bean
+    public ITrazabilityRepository traceabilityPersistencePort(ITrazabilityClient traceabilityClient) {
+        return new TrazabilityRepositoryImpl(traceabilityClient);
     }
 }

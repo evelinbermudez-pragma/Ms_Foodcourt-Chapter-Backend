@@ -17,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static com.chapter.foodcourt.insfrastructure.configuration.Constants.*;
+import static com.chapter.foodcourt.domain.model.Roles.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -67,7 +67,7 @@ class RestaurantUseCaseTest {
 
 
         when(userRepository.getUserById(ownerId))
-                .thenReturn(Optional.of(buildUser(ownerId, OWNER_ROLE_ID)));
+                .thenReturn(Optional.of(buildUser(ownerId, OWNER_ROLE_ID.getId())));
 
         restaurantUseCase.saveRestaurant(restaurant);
 
@@ -88,7 +88,7 @@ class RestaurantUseCaseTest {
         restaurant.setOwnerId(userId);
 
         when(userRepository.getUserById(userId))
-                .thenReturn(Optional.of(buildUser(userId, CLIENT_ROLE_ID)));
+                .thenReturn(Optional.of(buildUser(userId, CLIENT_ROLE_ID.getId())));
 
         InvalidRoleException exception = assertThrows(
                 InvalidRoleException.class,
@@ -107,7 +107,7 @@ class RestaurantUseCaseTest {
         restaurant.setOwnerId(userId);
 
         when(userRepository.getUserById(userId))
-                .thenReturn(Optional.of(buildUser(userId, CLIENT_ROLE_ID)));
+                .thenReturn(Optional.of(buildUser(userId, CLIENT_ROLE_ID.getId())));
 
         assertThrows(InvalidRoleException.class,
                 () -> restaurantUseCase.saveRestaurant(restaurant));
@@ -121,7 +121,7 @@ class RestaurantUseCaseTest {
         restaurant.setOwnerId(userId);
 
         when(userRepository.getUserById(userId))
-                .thenReturn(Optional.of(buildUser(userId, EMPLOYEE_ROLE_ID)));
+                .thenReturn(Optional.of(buildUser(userId, EMPLOYEE_ROLE_ID.getId())));
 
         assertThrows(InvalidRoleException.class,
                 () -> restaurantUseCase.saveRestaurant(restaurant));
@@ -140,7 +140,7 @@ class RestaurantUseCaseTest {
         restaurant.setOwnerId(ownerId);
 
         when(userRepository.getUserById(ownerId))
-                .thenReturn(Optional.of(buildUser(ownerId, OWNER_ROLE_ID)));
+                .thenReturn(Optional.of(buildUser(ownerId, OWNER_ROLE_ID.getId())));
 
         restaurantUseCase.saveRestaurant(restaurant);
 
@@ -203,7 +203,7 @@ class RestaurantUseCaseTest {
 
 
         when(userRepository.getUserByEmail(employeeEmail))
-                .thenReturn(Optional.of(buildUser(employeeId, EMPLOYEE_ROLE_ID)));
+                .thenReturn(Optional.of(buildUser(employeeId, EMPLOYEE_ROLE_ID.getId())));
         when(restaurantPersistencePort.getRestaurant(restaurantId)).thenReturn(restaurant);
 
         restaurantUseCase.saveRestaurantEmployee(restaurantEmployee);
@@ -229,7 +229,7 @@ class RestaurantUseCaseTest {
         restaurant.setId(restaurantId);
 
         when(userRepository.getUserByEmail(employeeEmail))
-                .thenReturn(Optional.of(buildUser(10, CLIENT_ROLE_ID)));
+                .thenReturn(Optional.of(buildUser(10, CLIENT_ROLE_ID.getId())));
         when(restaurantPersistencePort.getRestaurant(restaurantId)).thenReturn(restaurant);
 
         InvalidRoleException exception = assertThrows(
@@ -251,7 +251,7 @@ class RestaurantUseCaseTest {
         restaurantEmployee.setRestaurantId(restaurantId);
 
         when(userRepository.getUserByEmail(employeeEmail))
-                .thenReturn(Optional.of(buildUser(10, EMPLOYEE_ROLE_ID)));
+                .thenReturn(Optional.of(buildUser(10, EMPLOYEE_ROLE_ID.getId())));
         when(restaurantPersistencePort.getRestaurant(restaurantId)).thenReturn(null);
 
         RestaurantNotFoundException exception = assertThrows(
@@ -276,7 +276,7 @@ class RestaurantUseCaseTest {
         restaurant.setId(restaurantId);
 
         when(userRepository.getUserByEmail(employeeEmail))
-                .thenReturn(Optional.of(buildUser(10, OWNER_ROLE_ID)));
+                .thenReturn(Optional.of(buildUser(10, OWNER_ROLE_ID.getId())));
         when(restaurantPersistencePort.getRestaurant(restaurantId)).thenReturn(restaurant);
 
         assertThrows(InvalidRoleException.class,
@@ -296,7 +296,7 @@ class RestaurantUseCaseTest {
         restaurant.setId(restaurantId);
 
         when(userRepository.getUserByEmail(employeeEmail))
-                .thenReturn(Optional.of(buildUser(10, ADMIN_ROLE_ID)));
+                .thenReturn(Optional.of(buildUser(10, ADMIN_ROLE_ID.getId())));
         when(restaurantPersistencePort.getRestaurant(restaurantId)).thenReturn(restaurant);
 
         assertThrows(InvalidRoleException.class,

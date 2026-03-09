@@ -8,4 +8,9 @@ import lombok.Setter;
 public class OrderDishResponseDto {
     private Integer dishId;
     private Integer quantity;
+    private String name;
+    private String description;
+    private Double price;
+    private String category;
+    private String imageUrl;
 }

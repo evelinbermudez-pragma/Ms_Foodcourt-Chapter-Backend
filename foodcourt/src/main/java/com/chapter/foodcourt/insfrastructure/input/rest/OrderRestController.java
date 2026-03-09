@@ -4,7 +4,6 @@ import com.chapter.foodcourt.application.dto.request.OrderRequestDto;
 import com.chapter.foodcourt.application.dto.response.OrderResponseDto;
 import com.chapter.foodcourt.application.handler.interfaces.IOrderHandler;
 import com.chapter.foodcourt.domain.model.Status;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,52 +19,41 @@ public class OrderRestController {
     private final IOrderHandler orderHandler;
 
     @PostMapping
-    public ResponseEntity<Void> createOrder(@Valid @RequestBody OrderRequestDto orderRequestDto, HttpServletRequest request) {
-        Integer clientId = (Integer) request.getAttribute("userId");
-        orderHandler.createOrder(orderRequestDto, clientId);
+    public ResponseEntity<Void> createOrder(@Valid @RequestBody OrderRequestDto orderRequestDto) {
+        orderHandler.createOrder(orderRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @GetMapping("/state/{state}")
     public ResponseEntity<Page<OrderResponseDto>> listOrdersByStatus(
             @PathVariable Status state,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            HttpServletRequest request) {
-        Integer employeeId = (Integer) request.getAttribute("userId");
-        return ResponseEntity.ok(
-                orderHandler.listOrdersByStatus(state, employeeId, page, size));
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(orderHandler.listOrdersByStatus(state, page, size));
     }
+
     @PatchMapping("/assign/{orderId}")
-    public ResponseEntity<Void> assignOrder(
-            @PathVariable Integer orderId,
-            HttpServletRequest request) {
-        Integer employeeId = (Integer) request.getAttribute("userId");
-        orderHandler.assignOrderAndChangeStatus(orderId, employeeId);
+    public ResponseEntity<Void> assignOrder(@PathVariable Integer orderId) {
+        orderHandler.assignOrderAndChangeStatus(orderId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
     @PatchMapping("/ready/{orderId}")
-    public ResponseEntity<Void> notifyOrderReady(
-            @PathVariable Integer orderId,
-            HttpServletRequest request) {
-        Integer employeeId = (Integer) request.getAttribute("userId");
-        orderHandler.notifyOrderReady(orderId, employeeId);
+    public ResponseEntity<Void> notifyOrderReady(@PathVariable Integer orderId) {
+        orderHandler.notifyOrderReady(orderId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
     @PatchMapping("/deliver/{orderId}")
     public ResponseEntity<Void> deliverOrder(
             @PathVariable Integer orderId,
-            @RequestParam String pin,
-            HttpServletRequest request) {
-        Integer employeeId = (Integer) request.getAttribute("userId");
-        orderHandler.deliverOrder(orderId, employeeId, pin);
+            @RequestParam String pin) {
+        orderHandler.deliverOrder(orderId, pin);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
     @DeleteMapping("/cancel/{orderId}")
-    public ResponseEntity<Void> cancelOrder(
-            @PathVariable Integer orderId,
-            HttpServletRequest request) {
-        Integer clientId = (Integer) request.getAttribute("userId");
-        orderHandler.cancelOrder(orderId, clientId);
+    public ResponseEntity<Void> cancelOrder(@PathVariable Integer orderId) {
+        orderHandler.cancelOrder(orderId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

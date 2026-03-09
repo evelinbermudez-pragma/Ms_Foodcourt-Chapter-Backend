@@ -16,7 +16,11 @@ public class OrderDishEntity {
     @ManyToOne
     @JoinColumn(name = "order_id")
     private OrderEntity order;
-
     private Integer dishId;
     private Integer quantity;
+    private String dishName;
+    private String dishDescription;
+    private Double dishPrice;
+    private String dishCategory;
+    private String dishImageUrl;
 }

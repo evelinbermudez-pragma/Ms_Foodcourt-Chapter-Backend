@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -54,10 +55,20 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort{
         return  restaurantEmployeeRepository.findByEmployeeId(employeeId)
                  .map(restaurantEmployeeEntityMapper::toRestaurantEmployeeModel);
     }
+    /*
     @Override
     public Page<Restaurant> listRestaurants(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<RestaurantEntity> entities = restaurantRepository.findAllByOrderByName(pageable);
         return entities.map(restaurantEntityMapper::toRestaurantModel);
+    }
+     */
+    @Override
+    public List<Restaurant> listRestaurants(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return restaurantRepository.findAll(pageable)
+                .stream()
+                .map(restaurantEntityMapper::toRestaurantModel)
+                .toList();
     }
 }

@@ -23,31 +23,33 @@ public class OrderHandler implements IOrderHandler {
     private final OrderResponseMapper orderResponseMapper;
 
     @Override
-    public void createOrder(OrderRequestDto orderRequestDto, Integer clientId) {
+    public void createOrder(OrderRequestDto orderRequestDto) {
         Order order = orderRequestMapper.toOrder(orderRequestDto);
-        orderServicePort.createOrder(order, clientId);
+        orderServicePort.createOrder(order);
     }
     @Override
-    public Page<OrderResponseDto> listOrdersByStatus(Status status, Integer employeeId, int page, int size) {
+    public Page<OrderResponseDto> listOrdersByStatus(Status status, int page, int size) {
         return orderServicePort
-                .listOrdersByStatus(status, employeeId, page, size)
+                .listOrdersByStatus(status, page, size)
                 .map(orderResponseMapper::toOrderResponseDto);
     }
     @Override
-    public void assignOrderAndChangeStatus(Integer orderId, Integer employeeId) {
-        orderServicePort.assignOrderAndChangeStatus(orderId, employeeId);
+    public void assignOrderAndChangeStatus(Integer orderId) {
+        orderServicePort.assignOrderAndChangeStatus(orderId);
     }
     @Override
-    public void notifyOrderReady(Integer orderId, Integer employeeId) {
-        orderServicePort.notifyOrderReady(orderId, employeeId);
+    public void notifyOrderReady(Integer orderId) {
+        orderServicePort.notifyOrderReady(orderId);
     }
     @Override
-    public void deliverOrder(Integer orderId, Integer employeeId, String pin) {
-        orderServicePort.deliverOrder(orderId, employeeId, pin);
+    public void deliverOrder(Integer orderId, String pin) {
+        orderServicePort.deliverOrder(orderId, pin);
     }
     @Override
-    public void cancelOrder(Integer orderId, Integer clientId) {
-        orderServicePort.cancelOrder(orderId, clientId);
+    public void cancelOrder(Integer orderId) {
+        orderServicePort.cancelOrder(orderId);
     }
 
-}
+    }
+
+

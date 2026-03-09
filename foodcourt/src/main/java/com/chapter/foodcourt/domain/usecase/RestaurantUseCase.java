@@ -8,10 +8,12 @@ import com.chapter.foodcourt.domain.exception.*;
 import com.chapter.foodcourt.domain.model.Restaurant;
 import com.chapter.foodcourt.domain.model.RestaurantEmployee;
 import com.chapter.foodcourt.domain.spi.IRestaurantPersistencePort;
-import org.springframework.data.domain.Page;
 
+import java.util.List;
 
-import static com.chapter.foodcourt.insfrastructure.configuration.Constants.*;
+import static com.chapter.foodcourt.domain.model.Roles.EMPLOYEE_ROLE_ID;
+import static com.chapter.foodcourt.domain.model.Roles.OWNER_ROLE_ID;
+
 
 public class RestaurantUseCase implements IRestaurantServicePort {
 
@@ -29,7 +31,7 @@ public class RestaurantUseCase implements IRestaurantServicePort {
         User user = userRepository.getUserById(restaurant.getOwnerId())
                 .orElseThrow(() -> new InvalidRoleException("User not found"));
 
-        if (!user.getRoleId().equals(OWNER_ROLE_ID)) {
+        if (!user.getRoleId().equals(OWNER_ROLE_ID.getId())) {
             throw new InvalidRoleException("The user is not owner");
         }
         restaurantPersistencePort.saveRestaurant(restaurant);
@@ -43,7 +45,7 @@ public class RestaurantUseCase implements IRestaurantServicePort {
         Restaurant restaurant = restaurantPersistencePort
                 .getRestaurant(restaurantEmployee.getRestaurantId());
 
-        if (!user.getRoleId().equals(EMPLOYEE_ROLE_ID)) {
+        if (!user.getRoleId().equals(EMPLOYEE_ROLE_ID.getId())) {
             throw new InvalidRoleException("The user is not employee");
         }
         if (restaurant == null) {
@@ -64,8 +66,14 @@ public class RestaurantUseCase implements IRestaurantServicePort {
         return restaurantPersistencePort.getRestaurantOfEmployee(employeeId)
                 .orElseThrow(() -> new RestaurantNotFoundException("Employee not found"));
     }
+    /*
     @Override
     public Page<Restaurant> listRestaurants(Integer page, Integer size) {
+        return restaurantPersistencePort.listRestaurants(page, size);
+    }
+     */
+    @Override
+    public List<Restaurant> listRestaurants(Integer page, Integer size) {
         return restaurantPersistencePort.listRestaurants(page, size);
     }
 }

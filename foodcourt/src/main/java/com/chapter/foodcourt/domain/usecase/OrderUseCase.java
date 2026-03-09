@@ -9,6 +9,7 @@ import com.chapter.foodcourt.domain.spi.*;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
+import java.util.Random;
 
 public class OrderUseCase implements IOrderServicePort {
     private final IOrderPersistencePort orderPersistencePort;
@@ -16,17 +17,21 @@ public class OrderUseCase implements IOrderServicePort {
     private final IRestaurantPersistencePort restaurantPersistencePort;
     private final ISmsRepository smsRepository;
     private final IUserRepository userRepository;
+    private final ITrazabilityRepository traceabilityRepository;
+    private final IAuthenticationPort authenticationPort;
 
-    public OrderUseCase(IOrderPersistencePort orderPersistencePort, IDishPersistencePort dishPersistencePort, IRestaurantPersistencePort restaurantPersistencePort, ISmsRepository smsRepository, IUserRepository userRepository) {
+    public OrderUseCase(IOrderPersistencePort orderPersistencePort, IDishPersistencePort dishPersistencePort, IRestaurantPersistencePort restaurantPersistencePort, ISmsRepository smsRepository, IUserRepository userRepository, ITrazabilityRepository traceabilityRepository, IAuthenticationPort authenticationPort) {
          this.restaurantPersistencePort = restaurantPersistencePort;
         this.orderPersistencePort = orderPersistencePort;
         this.dishPersistencePort = dishPersistencePort;
         this.smsRepository = smsRepository;
         this.userRepository = userRepository;
+        this.traceabilityRepository = traceabilityRepository;
+        this.authenticationPort = authenticationPort;
     }
     @Override
-    public void createOrder(Order order, Integer clientId) {
-
+    public void createOrder(Order order) {
+        Integer clientId = authenticationPort.getAuthenticatedUserId();
         if (orderPersistencePort.hasActiveOrders(clientId)) {
             throw new ClientHasActiveOrderException("You already have an active order");
         }
@@ -35,16 +40,25 @@ public class OrderUseCase implements IOrderServicePort {
             if (!dish.getRestaurantId().equals(order.getRestaurantId())) {
                 throw new DishNotFromRestaurantException("Dish does not belong to this restaurant");
             }
+            orderDish.setDishName(dish.getName());
+            orderDish.setDishDescription(dish.getDescription());
+            orderDish.setDishPrice(dish.getPrice());
+            orderDish.setDishCategory(dish.getCategory().toString());
+            orderDish.setDishImageUrl(dish.getImageUrl());
         }
         order.setClientId(clientId);
         order.setStatus(Status.PENDING);
         order.setDate(LocalDateTime.now());
         orderPersistencePort.saveOrder(order);
+        traceabilityRepository.saveLog(
+                order.getId(), clientId, null, order.getRestaurantId(), null, "PENDING");
     }
 
+
     @Override
-    public Page<Order> listOrdersByStatus(Status status, Integer employeeId, int page, int size) {
+    public Page<Order> listOrdersByStatus(Status status, int page, int size) {
         // busca el restaurante del empleado
+        Integer employeeId = authenticationPort.getAuthenticatedUserId();
         RestaurantEmployee restaurantEmployee = restaurantPersistencePort
                 .getRestaurantOfEmployee(employeeId)
                 .orElseThrow(() -> new RuntimeException("Employee not assigned to any restaurant"));
@@ -57,7 +71,8 @@ public class OrderUseCase implements IOrderServicePort {
         );
     }
     @Override
-    public void assignOrderAndChangeStatus(Integer orderId, Integer employeeId) {
+    public void assignOrderAndChangeStatus(Integer orderId) {
+        Integer employeeId = authenticationPort.getAuthenticatedUserId();
         Order order = orderPersistencePort.getOrder(orderId);
 
         // Solo se pueden asignar pedidos en PENDING
@@ -68,9 +83,13 @@ public class OrderUseCase implements IOrderServicePort {
         order.setEmployeeId(employeeId);
         order.setStatus(Status.IN_PREPARATION);
         orderPersistencePort.saveOrder(order);
+        traceabilityRepository.saveLog(
+                //utilizar variables para status anterior y nuevo
+                orderId, order.getClientId(), employeeId,order.getRestaurantId(), "PENDING", "IN_PREPARATION");
     }
     @Override
-    public void notifyOrderReady(Integer orderId, Integer employeeId) {
+    public void notifyOrderReady(Integer orderId) {
+        Integer employeeId = authenticationPort.getAuthenticatedUserId();
         Order order = orderPersistencePort.getOrder(orderId);
 
         if (!order.getStatus().equals(Status.IN_PREPARATION)) {
@@ -87,13 +106,13 @@ public class OrderUseCase implements IOrderServicePort {
 
         // Obtiene teléfono y envía SMS
         String clientPhone = userRepository.getUserPhone(order.getClientId());
-        smsRepository.sendSms(
-                clientPhone,
-                "Tu pedido está listo. Pin de seguridad: " + pin
-        );
+        smsRepository.sendSms(clientPhone, "Tu pedido está listo. Pin de seguridad: " + pin);
+        traceabilityRepository.saveLog(
+                orderId, order.getClientId(), employeeId,order.getRestaurantId(), "IN_PREPARATION", "READY");
     }
     @Override
-    public void deliverOrder(Integer orderId, Integer employeeId, String pin) {
+    public void deliverOrder(Integer orderId, String pin) {
+        Integer employeeId = authenticationPort.getAuthenticatedUserId();
         Order order = orderPersistencePort.getOrder(orderId);
 
         if (!order.getStatus().equals(Status.READY)) {
@@ -106,9 +125,12 @@ public class OrderUseCase implements IOrderServicePort {
 
         order.setStatus(Status.DELIVERED);
         orderPersistencePort.saveOrder(order);
+        traceabilityRepository.saveLog(
+                orderId, order.getClientId(), employeeId,order.getRestaurantId(), "READY", "DELIVERED");
     }
     @Override
-    public void cancelOrder(Integer orderId, Integer clientId) {
+    public void cancelOrder(Integer orderId) {
+        Integer clientId = authenticationPort.getAuthenticatedUserId();
         Order order = orderPersistencePort.getOrder(orderId);
 
         if (!order.getClientId().equals(clientId)) {
@@ -125,5 +147,8 @@ public class OrderUseCase implements IOrderServicePort {
 
         order.setStatus(Status.CANCELLED);
         orderPersistencePort.saveOrder(order);
+        traceabilityRepository.saveLog(
+                orderId, clientId, null,order.getRestaurantId(), "PENDING", "CANCELLED");
     }
+
 }
